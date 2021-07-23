@@ -20,8 +20,14 @@ class Reporter extends Command {
         this.addFlag('output', value);
     }
     type(value) {
-        if (!value.startsWith('hist[') && !reporterValues.find(value)) {
-            throw Error('reporter must be either text, json, plot or hist[buckets]');
+        if (
+            !reporterValues.find(function (a) {
+                return a === value;
+            })
+        ) {
+            throw Error(
+                'reporter must be either text, json, plot or hist[buckets]'
+            );
         }
         return this.addFlag('type', value);
     }
