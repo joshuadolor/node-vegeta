@@ -1,4 +1,12 @@
-const { isInteger, isObject, createCommand, validateFile, convertToDuration, validateResolver, isValidRateStr } = require('./utils');
+const {
+    isInteger,
+    isObject,
+    createCommand,
+    validateFile,
+    convertToDuration,
+    validateResolver,
+    isValidRateStr,
+} = require('./utils');
 const Command = require('./command');
 const Reporter = require('./reporter');
 const Encoder = require('./encoder');
@@ -37,7 +45,9 @@ class Attacker extends Command {
         }
         let normalizedValue = value.toLowerCase().trim();
         if (['http', 'json'].indexOf(normalizedValue) === -1) {
-            throw Error(`format flag expected to be http or json got: ${value} instead`);
+            throw Error(
+                `format flag expected to be http or json got: ${value} instead`
+            );
         }
         return this.addFlag('format', normalizedValue);
     }
@@ -52,7 +62,7 @@ class Attacker extends Command {
     }
     header(name, value) {
         if (!value) {
-            throw Error('header must have both name and value')
+            throw Error('header must have both name and value');
         }
         return this.addFlag('header', `${name}=${value}`, false);
     }
@@ -100,7 +110,9 @@ class Attacker extends Command {
     }
     maxBody(value = -1) {
         if (typeof value !== 'number' || (value < 0 && value !== -1)) {
-            throw TypeError('max-body must be a number and can only be -1, or greater than or equal to 0');
+            throw TypeError(
+                'max-body must be a number and can only be -1, or greater than or equal to 0'
+            );
         }
         return this.addFlag('max-body', value);
     }
@@ -117,8 +129,10 @@ class Attacker extends Command {
         return this.addFlag('output', value);
     }
     rate(value) {
-        if (!isValidRateStr(value) || !isInteger(value) || value < 0) {
-            throw TypeError('rate must be a positive integer or a valid flexRate string (ex: 50/m)');
+        if (!isValidRateStr(value) || value < 0) {
+            throw TypeError(
+                'rate must be a positive integer or a valid flexRate string (ex: 50/m)'
+            );
         }
         return this.addFlag('rate', value);
     }
@@ -134,7 +148,9 @@ class Attacker extends Command {
         valueArr.forEach((resolver) => {
             validateResolver(resolver);
         });
-        let resolverStr = valueArr.map((resolver) => `${resolver.ip}:${resolver.port}`).join(',');
+        let resolverStr = valueArr
+            .map((resolver) => `${resolver.ip}:${resolver.port}`)
+            .join(',');
         return this.addFlag('resolvers', resolverStr);
     }
     rootCerts(value) {
@@ -162,7 +178,7 @@ class Attacker extends Command {
         this.addFlag('unix-socket', value);
     }
     workers(value) {
-        if (isInteger(value) || value < 0) {
+        if (!isInteger(value) || value < 0) {
             throw TypeError('workers must be a positive integer');
         }
         return this.addFlag('workers', value);
